@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { doc, setDoc, getFirestore } from 'firebase/firestore';
+import { Button } from 'antd';
 
 function App() {
   const [counter, setCounter] = useState(0);
@@ -26,7 +27,7 @@ function App() {
       <div>counter</div>
       <div>{counter}</div>
       <button onClick={() => setCounter(counter + 1)}>increase</button>
-      <button onClick={save}>save</button>
+      <Button onClick={save}>save</Button>
     </div>
   );
 }
