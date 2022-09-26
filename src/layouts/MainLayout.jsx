@@ -8,6 +8,8 @@ const LayoutStyled = styled.div`
   display: flex;
   flex-direction: column;
   gap: 50px;
+  max-width: 1200px;
+  margin: auto;
 `;
 
 function MainLayout() {

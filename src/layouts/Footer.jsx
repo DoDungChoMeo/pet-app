@@ -1,12 +1,24 @@
 import React from 'react';
+import styled from 'styled-components';
+
+const ContainerStyled = styled.footer`
+  background: var(--ant-primary-1);
+  height: 100px;
+  padding: 20px;
+
+  p {
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+`;
 
 function Footer() {
   return (
-    <footer>
+    <ContainerStyled>
       <div>
-        <p>Graduation thesis - Duc Tran</p>
+        <p>Duc Tran</p>
       </div>
-    </footer>
+    </ContainerStyled>
   );
 }
 
