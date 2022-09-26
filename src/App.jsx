@@ -1,34 +1,19 @@
-import { useState } from 'react';
-import { doc, setDoc, getFirestore } from 'firebase/firestore';
-import { Button } from 'antd';
+import { Routes, Route } from 'react-router-dom';
+
+import MainLayout from '~/layouts/MainLayout';
+import Counter from './Counter';
 
 function App() {
-  const [counter, setCounter] = useState(0);
-  const firestore = getFirestore();
-  const save = () => {
-    setDoc(
-      doc(firestore, 'users/user03'),
-      {
-        counter,
-      },
-      { merge: true }
-    )
-      .then(() => {
-        console.log('set counter success');
-      })
-      .catch(() => {
-        console.log('set counter error');
-      });
-  };
-
   return (
-    <div className="App">
-      <h1>Roboto</h1>
-      <div>counter</div>
-      <div>{counter}</div>
-      <button onClick={() => setCounter(counter + 1)}>increase</button>
-      <Button onClick={save}>save</Button>
-    </div>
+    <Routes>
+      <Route path="/" element={<MainLayout />}>
+        <Route index element={'home'} />
+        <Route path="san-pham" element={'san-pham'} />
+        <Route path="thanh-toan" element={'thanh-toan'} />
+        <Route path="counter" element={<Counter />} />
+      </Route>
+      <Route path="*" element={'page not found'} />
+    </Routes>
   );
 }
 
