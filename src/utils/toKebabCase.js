@@ -5,4 +5,4 @@
 //     .map((x) => x.toLowerCase())
 //     .join('-');
 const toKebabCase = (str) => str && str.toLowerCase().replaceAll(' ', '-');
-export { toKebabCase };
+export default toKebabCase;
