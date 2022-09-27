@@ -65,7 +65,7 @@ function ProductPage() {
 
       <ReviewSection className="review-section">
         <h3 className="review-title">1 đánh giá</h3>
-        {/* <Review /> */}
+        <Review />
         <ReviewForm title={'Đánh giá cho sản phẩm'} buttonText="Gửi đánh giá" />
       </ReviewSection>
     </ContainerStyled>
@@ -152,8 +152,14 @@ const ContainerStyled = styled.div`
 `;
 
 const ReviewSection = styled.section`
+  margin-top: 50px;
+
   .review-title {
     font-size: var(--fs-h3);
+  }
+
+  .review-form {
+    max-width: 700px;
   }
 `;
 

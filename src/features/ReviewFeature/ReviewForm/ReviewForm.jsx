@@ -88,12 +88,6 @@ const ContainerStyled = styled.div`
     font-size: var(--fs-h4);
   }
 
-  .ant-form {
-    margin-top: 20px;
-    width: 100%;
-    max-width: 600px;
-  }
-
   .ant-rate-text {
     font-weight: 600;
   }

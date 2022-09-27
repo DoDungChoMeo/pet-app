@@ -5,7 +5,6 @@ import { products } from '~/data';
 import styled from 'styled-components';
 
 function HomePage() {
-  console.log(products);
   return (
     <ContainerStyled className="home-page">
       <List
