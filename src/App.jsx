@@ -11,7 +11,7 @@ function App() {
       <Route path="/" element={<MainLayout />}>
         <Route index element={<HomePage />} />
         <Route path="product/:productId" element={<ProductPage />} />
-        <Route path="thanh-toan" element={'thanh-toan'} />
+        <Route path="cart" element={'trang gio hang'} />
         <Route path="counter" element={<Counter />} />
       </Route>
       <Route path="*" element={'page not found'} />

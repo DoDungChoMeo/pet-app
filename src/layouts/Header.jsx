@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { ShoppingCartOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import logo from '~/assets/img/logo-pet-friends-2.png';
 
@@ -18,9 +19,22 @@ const ContainerStyled = styled.header`
 `;
 
 const Logo = styled.div`
+  margin-right: auto;
   img {
     display: block;
     height: 80px;
+  }
+`;
+
+const CartLink = styled(Link)`
+  cursur: pointer;
+  .cart-icon {
+    color: var(--ant-primary-color);
+    font-size: 2.5rem;
+
+    &:hover {
+      color: var(--ant-primary-color-hover);
+    }
   }
 `;
 
@@ -34,6 +48,10 @@ function Header() {
             <img src={logo} />
           </Link>
         </Logo>
+
+        <CartLink to="/cart">
+          <ShoppingCartOutlined className="cart-icon" />
+        </CartLink>
       </nav>
     </ContainerStyled>
   );
