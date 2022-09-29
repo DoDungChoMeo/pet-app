@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.7.0",
     "antd": "^4.23.2",
     "firebase": "^9.10.0",
     "moment": "^2.29.4",
