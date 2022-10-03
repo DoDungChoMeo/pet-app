@@ -3,31 +3,37 @@ import { useParams } from 'react-router-dom';
 import { Image, Rate, Button, InputNumber, Tag } from 'antd';
 import styled from 'styled-components';
 
-import { products } from '~/data';
+// import { products } from '~/data';
 import { formatVietnamCurrency } from '~/utils';
 import { Review, ReviewForm } from '~/features/ReviewFeature';
+import { useProductContext } from '~/contexts/ProductProvider';
 
 function ProductPage() {
   const { productId } = useParams();
-  const product = products.find((item) => item.id === productId);
-
+  const { products, loading } = useProductContext();
+  console.log(products);
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
+  const product = products?.find((product) => product.id == productId);
+  console.log(product);
   return (
     <ContainerStyled className="product-page">
       <section className="product-main-content">
         <div className="product-images">
           <div className="main-image">
-            <Image className="image" src={product.image} />
+            <Image className="image" src={product?.images[0]} />
           </div>
           <div className="image-picker">
-            <img className="image" src={product.image} />
-            <img className="image" src={product.image} />
+            {/* <img className="image" src={product.images[1]} /> */}
+            {/* <img className="image" src={product.images[2]} /> */}
           </div>
         </div>
 
         <div className="product-info">
           <h3>{product.title}</h3>
-          <Rate defaultValue disabled={true} />
-          <p className="price">{formatVietnamCurrency(product.price.value)}</p>
+          <Rate defaultValue={product.rating} disabled={true} />
+          <p className="price">{formatVietnamCurrency(product.price)}</p>
           <p className="description">{product.description}</p>
           <div className="product-control">
             <label htmlFor="quantity-input">
@@ -44,10 +50,6 @@ function ProductPage() {
             </Button>
           </div>
           <div className="additional-info">
-            <div className="additional-info-group">
-              <span>Mã đơn hàng: </span>
-              <Tag>{product.sku}</Tag>
-            </div>
             <div className="additional-info-group">
               <span>Tình trạng: </span>
               <Tag>

@@ -69,7 +69,8 @@ function Card({ title, image, rating, price, id }) {
     <Container>
       <div className="card-inner">
         <div className="card-image-wrapper">
-          <Link to={'product/' + toKebabCase(removeVietnameseTones(title))}>
+          <Link to={'product/' + id}>
+            {/* <Link to={'product/' + toKebabCase(removeVietnameseTones(title))}> */}
             <img src={image || IMAGE_FALLBACK} alt={title} />
           </Link>
         </div>
@@ -78,7 +79,7 @@ function Card({ title, image, rating, price, id }) {
             {title}
           </h4>
           <Rate defaultValue={rating} disabled={true} />
-          <p className="price">{formatVietnamCurrency(price.value)}</p>
+          <p className="price">{formatVietnamCurrency(price)}</p>
         </div>
         {/* <div className="card-button-group">
           <Button type="primary" size="large">

@@ -1,10 +1,14 @@
 import React from 'react';
 import { List } from 'antd';
 import { Card } from '~/components';
-import { products } from '~/data';
+// import { products } from '~/data';
 import styled from 'styled-components';
+import { useProductContext } from '~/contexts/ProductProvider';
 
 function HomePage() {
+  const { products } = useProductContext();
+  console.log(products);
+
   return (
     <ContainerStyled className="home-page">
       <List
@@ -19,12 +23,12 @@ function HomePage() {
         }}
         dataSource={products}
         renderItem={(item) => {
-          const { title, image, rating, price, id } = item;
+          const { title, images, rating, price, id } = item;
           return (
             <List.Item>
               <Card
                 title={title}
-                image={image}
+                image={images[0]}
                 rating={rating}
                 price={price}
                 id={id}
