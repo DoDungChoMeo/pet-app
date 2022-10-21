@@ -11,7 +11,7 @@ function useFirestoreCollection(collectionName) {
     const unsubscribe = onSnapshot(
       collection(firestore, collectionName),
       (snapshot) => {
-        setFirestoreCollection(snapshot.docs.map((e) => e.data()));
+        setFirestoreCollection(snapshot.docs.map((doc) => doc.data()));
         setFirestoreLoading(false);
       }
     );
