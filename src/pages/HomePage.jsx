@@ -7,7 +7,6 @@ import { useProductContext } from '~/contexts/ProductProvider';
 
 function HomePage() {
   const { products } = useProductContext();
-  console.log(products);
 
   return (
     <ContainerStyled className="home-page">
@@ -23,15 +22,15 @@ function HomePage() {
         }}
         dataSource={products}
         renderItem={(item) => {
-          const { title, images, rating, price, id } = item;
+          const { title, images, rating, productId, inventories } = item;
           return (
             <List.Item>
               <Card
                 title={title}
                 image={images[0]}
                 rating={rating}
-                price={price}
-                id={id}
+                price={inventories[0]?.price}
+                id={productId}
               />
             </List.Item>
           );
