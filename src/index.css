@@ -10,7 +10,7 @@
   --fs-h4: 1.75rem;
   --fs-h5: 1.5rem;
   --box-shadow-0: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  --box-shadow-1: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;;
+  --box-shadow-1: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
 body {
@@ -30,6 +30,6 @@ body {
   padding: 0;
   margin: -1px;
   overflow: hidden;
-  clip: rect(0,0,0,0);
+  clip: rect(0, 0, 0, 0);
   border: 0;
 }
