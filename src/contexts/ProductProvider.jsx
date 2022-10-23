@@ -1,25 +1,13 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useContext } from 'react';
+import { useFirestoreCollection } from '~/hooks';
 
 const ProductContext = React.createContext();
 
 function ProductProvider({ children }) {
-  const [products, setProducts] = useState();
-  const [loading, setLoading] = useState(false);
-
-  const fetchProduct = async () => {
-    setLoading(true);
-    const res = await fetch('https://dummyjson.com/products');
-    const data = await res.json();
-    setProducts(data.products);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    fetchProduct();
-  }, []);
+  const [products, productsLoading] = useFirestoreCollection('products');
 
   return (
-    <ProductContext.Provider value={{ products, loading }}>
+    <ProductContext.Provider value={{ products, productsLoading }}>
       {children}
     </ProductContext.Provider>
   );
