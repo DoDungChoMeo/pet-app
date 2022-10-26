@@ -1,20 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Image, Rate, Button, InputNumber, Tag } from 'antd';
 import styled from 'styled-components';
 
 // import { products } from '~/data';
-import { useFirestoreDocument } from '~/hooks';
-import { formatVietnamCurrency } from '~/utils';
+import { useFirestoreQuery } from '~/hooks';
 import { Review, ReviewForm } from '~/features/ReviewFeature';
 import { useCartContext } from '~/contexts/CartProvider';
-import { ProductImageCarousel } from '~/features/ProductFeature';
+import { ProductImageCarousel, ProductEntry } from '~/features/ProductFeature';
+import { query, where, collection, getFirestore } from 'firebase/firestore';
 
 function ProductPage() {
-  const { productId } = useParams();
-  const path = `products/${productId}`;
-  const [product, productLoading] = useFirestoreDocument(path);
-  console.log(product);
+  const { bookmarkName } = useParams();
+  const path = `products`;
+  const firestore = getFirestore();
+  const q = query(
+    collection(firestore, path),
+    where('bookmarkName', '==', bookmarkName)
+  );
+  const [[product], productLoading] = useFirestoreQuery(q);
+
   if (productLoading) {
     return <h1>Loading...</h1>;
   }
