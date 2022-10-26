@@ -5,7 +5,6 @@ import { Card } from '~/components';
 import styled from 'styled-components';
 import { useProductContext } from '~/contexts/ProductProvider';
 import { useFirestoreCollection } from '~/hooks';
-import _ from 'lodash';
 
 function HomePage() {
   const { products } = useProductContext();
@@ -24,9 +23,11 @@ function HomePage() {
         }}
         dataSource={products}
         renderItem={(item) => {
-          const { title, images, rating, productId } = item;
-          const index = _.findIndex(inventories, { productId: productId });
-          const price = index !== -1 ? inventories[index].price : NaN;
+          const { title, images, rating, productId, bookmarkName } = item;
+          const inventory = inventories.find(
+            (inven) => inven.productId === productId
+          );
+
           return (
             <List.Item>
               <Card
@@ -34,7 +35,8 @@ function HomePage() {
                 image={images[0]}
                 rating={rating}
                 id={productId}
-                price={price}
+                price={inventory?.price}
+                bookmarkName={bookmarkName}
               />
             </List.Item>
           );
