@@ -12,7 +12,7 @@ const ProductImageCarousel = ({ images = [] }) => {
       <div className="image-picker">
         {images.map((image, i) => {
           return (
-            <a onClick={() => setActive(i)}>
+            <a key={i} onClick={() => setActive(i)}>
               <img
                 key={image}
                 className="image"
