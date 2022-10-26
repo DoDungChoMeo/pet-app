@@ -4,10 +4,12 @@ import { Card } from '~/components';
 // import { products } from '~/data';
 import styled from 'styled-components';
 import { useProductContext } from '~/contexts/ProductProvider';
+import { useFirestoreCollection } from '~/hooks';
+import _ from 'lodash';
 
 function HomePage() {
   const { products } = useProductContext();
-
+  const [inventories] = useFirestoreCollection('inventories');
   return (
     <ContainerStyled className="home-page">
       <List
@@ -22,15 +24,17 @@ function HomePage() {
         }}
         dataSource={products}
         renderItem={(item) => {
-          const { title, images, rating, productId, inventories } = item;
+          const { title, images, rating, productId } = item;
+          const index = _.findIndex(inventories, { productId: productId });
+          const price = index !== -1 ? inventories[index].price : NaN;
           return (
             <List.Item>
               <Card
                 title={title}
                 image={images[0]}
                 rating={rating}
-                price={inventories[0]?.price}
                 id={productId}
+                price={price}
               />
             </List.Item>
           );
