@@ -5,16 +5,20 @@ import { formatVietnamCurrency } from '~/utils';
 import { useCartContext } from '~/contexts/CartProvider';
 import { useFirestoreQuery } from '~/hooks';
 import { query, where, getFirestore, collection } from 'firebase/firestore';
+import productSalesState from './utils/productSalesState';
 
 const ProductEntry = ({ product }) => {
-  const { cart, addToCart } = useCartContext();
+  const { addToCart } = useCartContext();
   const [productQuantity, setProductQuantity] = useState(1);
-  // console.log(cart);
-  // console.log(productQuantity);
+
   const firestore = getFirestore();
   const inventoriesRef = collection(firestore, 'inventories');
   const q = query(inventoriesRef, where('productId', '==', product?.productId));
   const [[inventory]] = useFirestoreQuery(q);
+  const salesState = productSalesState(
+    inventory?.stock,
+    inventory?.reservations
+  );
 
   return (
     <Container>
@@ -24,20 +28,24 @@ const ProductEntry = ({ product }) => {
         <span className="brand">{product?.brand}</span>
         <span> | </span>
         <span>Tình trạng: </span>
-        <Tag>
-          {(inventory?.stock > 0 && `Còn ${inventory?.stock} sản phẩm`) ||
-            'Hết hàng'}
-        </Tag>
+        <Tag>{salesState?.status}</Tag>
+      </p>
+      <p>
+        <span>Đã bán: </span>
+        <Tag>{salesState?.sold}</Tag>
+        <span> | </span>
+        <span>Còn lại: </span>
+        <Tag>{salesState?.remaining}</Tag>
       </p>
       <Rate defaultValue={product?.rating} disabled={true} />
       <p className="price">{formatVietnamCurrency(inventory?.price)}</p>
-      <p className="description">{product?.description}</p>
       <div className="product-control">
         <label htmlFor="quantity-input">
           <span className="quantity-label">Số lượng: </span>
           <InputNumber
             id="quantity-input"
             min={1}
+            max={salesState?.remaining}
             defaultValue={1}
             value={productQuantity}
             onChange={(value) => setProductQuantity(value)}
@@ -46,7 +54,13 @@ const ProductEntry = ({ product }) => {
         <Button
           type="primary"
           onClick={() => {
-            addToCart();
+            addToCart({
+              image: product?.images[0],
+              title: product?.title,
+              productId: product?.productId,
+              quantity: productQuantity,
+              price: inventory?.price,
+            });
           }}
         >
           Thêm vào giỏ hàng
@@ -60,6 +74,7 @@ const ProductEntry = ({ product }) => {
           })}
         </div>
       </div>
+      <p className="description">{product?.description}</p>
     </Container>
   );
 };
