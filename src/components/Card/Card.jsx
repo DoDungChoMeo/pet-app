@@ -61,6 +61,11 @@ const Container = styled.div`
       width: 100%;
       border-radius: 20px;
       box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+      transition: all 0.2s ease-in-out;
+      :hover {
+        transform: translate(0, -4px);
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 8px 8px;
+      }
     }
   }
 
@@ -113,7 +118,7 @@ const Container = styled.div`
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
     }
   }
 `;
