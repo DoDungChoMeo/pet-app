@@ -1,31 +1,52 @@
+import { useState } from 'react';
+import { Rate, InputNumber, Button, Tag } from 'antd';
+import styled from 'styled-components';
+import { formatVietnamCurrency } from '~/utils';
+import { useCartContext } from '~/contexts/CartProvider';
+import { useFirestoreQuery } from '~/hooks';
+import { query, where, getFirestore, collection } from 'firebase/firestore';
+
 const ProductEntry = ({ product }) => {
+  const { cart, addToCart } = useCartContext();
+  const [productQuantity, setProductQuantity] = useState(1);
+  // console.log(cart);
+  // console.log(productQuantity);
+  const firestore = getFirestore();
+  const inventoriesRef = collection(firestore, 'inventories');
+  const q = query(inventoriesRef, where('productId', '==', product?.productId));
+  const [[inventory]] = useFirestoreQuery(q);
+
   return (
     <Container>
       <h3>{product?.title}</h3>
       <p>
         <span>Thương hiệu: </span>
         <span className="brand">{product?.brand}</span>
+        <span> | </span>
+        <span>Tình trạng: </span>
+        <Tag>
+          {(inventory?.stock > 0 && `Còn ${inventory?.stock} sản phẩm`) ||
+            'Hết hàng'}
+        </Tag>
       </p>
       <Rate defaultValue={product?.rating} disabled={true} />
-      <p className="price">
-        {formatVietnamCurrency(product?.inventories[0].price)}
-      </p>
+      <p className="price">{formatVietnamCurrency(inventory?.price)}</p>
       <p className="description">{product?.description}</p>
       <div className="product-control">
         <label htmlFor="quantity-input">
           <span className="quantity-label">Số lượng: </span>
           <InputNumber
             id="quantity-input"
-            size="large"
             min={1}
             defaultValue={1}
+            value={productQuantity}
+            onChange={(value) => setProductQuantity(value)}
           />
         </label>
         <Button
           type="primary"
-          size="large"
           onClick={() => {
-            addToCart({ title: 'iphone', quantity: 2, price: 200 });
+            addToCart();
           }}
         >
           Thêm vào giỏ hàng
@@ -33,15 +54,9 @@ const ProductEntry = ({ product }) => {
       </div>
       <div className="additional-info">
         <div className="additional-info-group">
-          <span>Tình trạng: </span>
-          <Tag>
-            {(product?.stock > 0 && `còn ${product?.stock}`) || 'hết hàng'}
-          </Tag>
-        </div>
-        <div className="additional-info-group">
           <span>Danh mục: </span>
           {product?.categories?.map((category) => {
-            return <Tag>{category}</Tag>;
+            return <Tag key={category}>{category}</Tag>;
           })}
         </div>
       </div>
@@ -83,6 +98,10 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     gap: 4px;
+  }
+
+  .brand {
+    color: var(--ant-primary-color);
   }
 `;
 
