@@ -1,6 +1,12 @@
 import React, { useContext, useReducer } from 'react';
 import cartReducer from './CartReducer';
-import { ADD_TO_CART } from './CartReducer';
+import {
+  ADD_TO_CART,
+  INCREASE_QUANTITY,
+  DECREASE_QUANTITY,
+  REMOVE_ITEM,
+  INPUT_QUANTITY,
+} from './CartReducer';
 
 const CartContext = React.createContext();
 
@@ -21,8 +27,33 @@ function CartProvider({ children }) {
     dispatch({ type: ADD_TO_CART, payload: product });
   };
 
+  const increaseQuantity = (productId) => {
+    dispatch({ type: INCREASE_QUANTITY, payload: { productId } });
+  };
+
+  const decreaseQuantity = (productId) => {
+    dispatch({ type: DECREASE_QUANTITY, payload: { productId } });
+  };
+
+  const inputQuantity = (productId, quantity) => {
+    dispatch({ type: INPUT_QUANTITY, payload: { productId, quantity } });
+  };
+
+  const removeItem = (productId) => {
+    dispatch({ type: REMOVE_ITEM, payload: { productId } });
+  };
+
   return (
-    <CartContext.Provider value={{ cart, addToCart }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        addToCart,
+        increaseQuantity,
+        decreaseQuantity,
+        inputQuantity,
+        removeItem,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

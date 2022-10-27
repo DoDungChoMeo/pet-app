@@ -5,10 +5,10 @@ import { formatVietnamCurrency } from '~/utils';
 import { useCartContext } from '~/contexts/CartProvider';
 import { useFirestoreQuery } from '~/hooks';
 import { query, where, getFirestore, collection } from 'firebase/firestore';
-import productSalesState from './utils/productSalesState';
+import { productSalesState } from './utils';
 
 const ProductEntry = ({ product }) => {
-  const { addToCart } = useCartContext();
+  const { cart, addToCart } = useCartContext();
   const [productQuantity, setProductQuantity] = useState(1);
 
   const firestore = getFirestore();
@@ -19,6 +19,14 @@ const ProductEntry = ({ product }) => {
     inventory?.stock,
     inventory?.reservations
   );
+
+  const productInCart = cart.products.find(
+    (cartItem) => cartItem.productId === product?.productId
+  );
+
+  const numberCanAdd = productInCart?.quantity
+    ? salesState?.remaining - productInCart?.quantity
+    : salesState?.remaining;
 
   return (
     <Container>
@@ -45,7 +53,11 @@ const ProductEntry = ({ product }) => {
           <InputNumber
             id="quantity-input"
             min={1}
-            max={salesState?.remaining}
+            max={
+              productInCart?.quantity
+                ? salesState?.remaining - productInCart?.quantity
+                : salesState?.remaining
+            }
             defaultValue={1}
             value={productQuantity}
             onChange={(value) => setProductQuantity(value)}
@@ -62,6 +74,7 @@ const ProductEntry = ({ product }) => {
               price: inventory?.price,
             });
           }}
+          disabled={numberCanAdd === 0}
         >
           Thêm vào giỏ hàng
         </Button>
