@@ -3,23 +3,17 @@ import { Rate, InputNumber, Button, Tag } from 'antd';
 import styled from 'styled-components';
 import { formatVietnamCurrency } from '~/utils';
 import { useCartContext } from '~/contexts/CartProvider';
-import { useFirestoreQuery } from '~/hooks';
-import { query, where, getFirestore, collection } from 'firebase/firestore';
 import { productSalesState } from './utils';
 
 const ProductEntry = ({ product }) => {
   const { cart, addToCart } = useCartContext();
   const [productQuantity, setProductQuantity] = useState(1);
+  const { inventory } = product;
 
-  const firestore = getFirestore();
-  const inventoriesRef = collection(firestore, 'inventories');
-  const q = query(inventoriesRef, where('productId', '==', product?.productId));
-  const [[inventory]] = useFirestoreQuery(q);
   const salesState = productSalesState(
     inventory?.stock,
     inventory?.reservations
   );
-
   const productInCart = cart.products.find(
     (cartItem) => cartItem.productId === product?.productId
   );
@@ -72,6 +66,7 @@ const ProductEntry = ({ product }) => {
               productId: product?.productId,
               quantity: productQuantity,
               price: inventory?.price,
+              inventory,
             });
           }}
           disabled={numberCanAdd === 0}
@@ -87,7 +82,6 @@ const ProductEntry = ({ product }) => {
           })}
         </div>
       </div>
-      <p className="description">{product?.description}</p>
     </Container>
   );
 };

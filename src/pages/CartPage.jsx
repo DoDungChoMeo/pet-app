@@ -1,11 +1,10 @@
+import { useNavigate } from 'react-router-dom';
 import { Table, Button, Popconfirm, InputNumber } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import React from 'react';
 import styled from 'styled-components';
-import { query, where, collection, getFirestore } from 'firebase/firestore';
 import { useCartContext } from '~/contexts/CartProvider';
 import { Price } from '~/components';
-import { useFirestoreQuery } from '~/hooks';
 import { productSalesState } from '~/features/ProductFeature/utils';
 
 const columns = [
@@ -37,6 +36,7 @@ const columns = [
 ];
 
 function CartPage() {
+  const navigate = useNavigate();
   const {
     cart,
     increaseQuantity,
@@ -44,46 +44,31 @@ function CartPage() {
     inputQuantity,
     removeItem,
   } = useCartContext();
-  const firestore = getFirestore();
-  const productIdList = cart.products.map((product) => product.productId);
-  const q =
-    productIdList.length > 0
-      ? query(
-          collection(firestore, 'inventories'),
-          where('productId', 'in', productIdList)
-        )
-      : query(
-          collection(firestore, 'inventories'),
-          where('productId', 'in', [''])
-        );
-  const [inventories] = useFirestoreQuery(q);
-
+  console.log(cart);
   let dataSource = [];
-  dataSource = cart.products.map((product) => {
-    const inventory = inventories.find(
-      (inven) => inven.productId === product?.productId
-    );
+  dataSource = cart.products.map((cartItem) => {
+    const { inventory } = cartItem;
     const salesState = productSalesState(
       inventory?.stock,
       inventory?.reservations
     );
     return {
-      key: product?.productId,
+      key: cartItem?.productId,
       item: (
         <Item>
-          <img width={100} src={product?.image} alt={product?.title} />
-          <span>{product?.title}</span>
+          <img width={100} src={cartItem?.image} alt={cartItem?.title} />
+          <span>{cartItem?.title}</span>
         </Item>
       ),
-      price: <Price>{product?.price}</Price>,
+      price: <Price>{cartItem?.price}</Price>,
       quantity: (
         <Quantity>
           <Button
             size="small"
             onClick={() => {
               // không được ít hơn 1
-              if (product?.quantity > 1) {
-                decreaseQuantity(product?.productId);
+              if (cartItem?.quantity > 1) {
+                decreaseQuantity(cartItem?.productId);
               }
             }}
           >
@@ -91,20 +76,20 @@ function CartPage() {
           </Button>
           {/* <span>{product?.quantity}</span> */}
           <InputNumber
-            value={product?.quantity}
+            value={cartItem?.quantity}
             controls={false}
             size="small"
             className="input-number"
             min={1}
             max={salesState.remaining}
-            onChange={(value) => inputQuantity(product?.productId, value)}
+            onChange={(value) => inputQuantity(cartItem?.productId, value)}
           />
           <Button
             size="small"
             onClick={() => {
               // không được tăng quá số lượng còn lại
-              if (product?.quantity < salesState.remaining) {
-                increaseQuantity(product?.productId);
+              if (cartItem?.quantity < salesState.remaining) {
+                increaseQuantity(cartItem?.productId);
               }
             }}
           >
@@ -112,13 +97,13 @@ function CartPage() {
           </Button>
         </Quantity>
       ),
-      total: <Price>{product?.quantity * product?.price}</Price>,
+      total: <Price>{cartItem?.quantity * cartItem?.price}</Price>,
       action: (
         <Popconfirm
           title="Bạn có muốn xóa?"
           okText="Xóa"
           cancelText="Không"
-          onConfirm={() => removeItem(product?.productId)}
+          onConfirm={() => removeItem(cartItem?.productId)}
         >
           <DeleteOutlined
             style={{
@@ -140,7 +125,13 @@ function CartPage() {
           <Price>{cart?.total}</Price>
         </strong>
 
-        <Button type="primary">Thanh toán</Button>
+        <Button
+          type="primary"
+          onClick={() => navigate('/checkout')}
+          disabled={cart?.quantity === 0}
+        >
+          Tiến hành thanh toán
+        </Button>
       </CartSummary>
     </ContainerStyled>
   );
