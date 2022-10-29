@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Table, Button, Popconfirm, InputNumber } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import React from 'react';
@@ -120,6 +120,7 @@ function CartPage() {
     <ContainerStyled>
       <Table columns={columns} dataSource={dataSource} pagination={false} />
       <CartSummary>
+        <Link to="/">Tiếp tục mua sắm</Link>
         <strong>
           <span>Tổng cộng: </span>
           <Price>{cart?.total}</Price>
