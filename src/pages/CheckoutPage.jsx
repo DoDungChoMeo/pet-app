@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Divider, Button } from 'antd';
+import { Row, Col, Divider, Button, Form } from 'antd';
 import styled from 'styled-components';
 
 import {
@@ -13,6 +13,27 @@ import { useCartContext } from '~/contexts/CartProvider';
 
 function CheckoutPage() {
   const { cart } = useCartContext();
+  const [formCheckout] = Form.useForm();
+  const [formPayment] = Form.useForm();
+  const handleCheckout = () => {
+    formCheckout
+      .validateFields()
+      .then((values) => {
+        formPayment
+          .validateFields()
+          .then((payment) => {
+            const orderData = {
+              ...values,
+              notes: values.notes || '',
+              ...payment,
+              cart,
+            };
+            console.log({ orderData });
+          })
+          .catch((e) => console.log(e));
+      })
+      .catch((e) => console.log(e));
+  };
 
   return (
     <ContainerStyled>
@@ -21,13 +42,13 @@ function CheckoutPage() {
           <Headline>
             <h2>Thông tin khách hàng</h2>
           </Headline>
-          <CheckoutForm />
+          <CheckoutForm form={formCheckout} />
         </Col>
         <Col span={24} lg={8}>
           <Headline>
             <h2>Phương thức thanh toán</h2>
           </Headline>
-          <PaymentMethod />
+          <PaymentMethod form={formPayment} />
         </Col>
         <Col span={24} lg={8} className="cart-info">
           <Headline>
@@ -43,7 +64,11 @@ function CheckoutPage() {
           <ButtonGroup>
             <Link to="/cart">Quay lại giỏ hàng</Link>
 
-            <Button type="primary" disabled={cart?.quantity === 0}>
+            <Button
+              onClick={handleCheckout}
+              type="primary"
+              disabled={cart?.quantity === 0}
+            >
               Thanh toán
             </Button>
           </ButtonGroup>
