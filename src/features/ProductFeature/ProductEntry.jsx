@@ -25,6 +25,7 @@ const ProductEntry = ({ product }) => {
   return (
     <Container>
       <h3>{product?.title}</h3>
+      <Rate defaultValue={product?.rating} disabled={true} />
       <p>
         <span>Thương hiệu: </span>
         <span className="brand">{product?.brand}</span>
@@ -39,7 +40,6 @@ const ProductEntry = ({ product }) => {
         <span>Còn lại: </span>
         <Tag>{salesState?.remaining}</Tag>
       </p>
-      <Rate defaultValue={product?.rating} disabled={true} />
       <p className="price">{formatVietnamCurrency(inventory?.price)}</p>
       <div className="product-control">
         <label htmlFor="quantity-input">
