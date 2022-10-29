@@ -1,11 +1,10 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { Skeleton } from 'antd';
 
-// import { products } from '~/data';
 import { useFirestoreQuery } from '~/hooks';
 import { Review, ReviewForm } from '~/features/ReviewFeature';
-import { useCartContext } from '~/contexts/CartProvider';
 import { ProductImageCarousel, ProductEntry } from '~/features/ProductFeature';
 import { query, where, collection, getFirestore } from 'firebase/firestore';
 
@@ -19,20 +18,34 @@ function ProductPage() {
   );
   const [[product], productLoading] = useFirestoreQuery(q);
 
-  if (productLoading) {
-    return <h1>Loading...</h1>;
-  }
-
   return (
     <>
       <ContainerStyled className="product-page">
         <section className="product-main-content">
           <div className="product-images">
-            <ProductImageCarousel images={product?.images} />
+            {productLoading ? (
+              <Skeleton
+                active
+                paragraph={{
+                  rows: 8,
+                }}
+              />
+            ) : (
+              <ProductImageCarousel images={product?.images} />
+            )}
           </div>
 
           <div className="product-info">
-            <ProductEntry product={product} />
+            {productLoading ? (
+              <Skeleton
+                active
+                paragraph={{
+                  rows: 8,
+                }}
+              />
+            ) : (
+              <ProductEntry product={product} />
+            )}
           </div>
         </section>
 
@@ -59,7 +72,7 @@ const ContainerStyled = styled.div`
   .product-main-content {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 40px;
   }
 
   .product-images,
