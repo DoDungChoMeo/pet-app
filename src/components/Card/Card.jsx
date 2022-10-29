@@ -75,7 +75,7 @@ const Container = styled.div`
     .title {
       margin: 0;
       text-transform: capitalize;
-      font-size: 1.5rem;
+      font-size: 1rem;
       font-weight: 700;
       white-space: nowrap;
       overflow: hidden;
