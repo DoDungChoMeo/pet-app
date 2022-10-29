@@ -38,7 +38,7 @@ const ContainerStyled = styled.header`
     padding: 0 20px;
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
   }
 `;
