@@ -15,8 +15,8 @@ function FirebaseProvider({ children }) {
     window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1'
   ) {
-    // connectAuthEmulator(auth, 'http://localhost:9099');
-    // connectFirestoreEmulator(firestore, 'localhost', 8080);
+    connectAuthEmulator(auth, 'http://localhost:9099');
+    connectFirestoreEmulator(firestore, 'localhost', 8080);
   }
 
   return <>{children}</>;
