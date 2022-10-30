@@ -1,21 +1,15 @@
 import React from 'react';
+import { initializeApp } from 'firebase/app';
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
-import { getStorage, connectStorageEmulator } from 'firebase/storage';
-import {
-  useFirebaseApp,
-  AuthProvider,
-  FirestoreProvider,
-  StorageProvider,
-} from 'reactfire';
 import { getAnalytics } from 'firebase/analytics';
+import { firebaseConfig } from '~/firebase.config';
 
 function FirebaseProvider({ children }) {
-  const app = useFirebaseApp();
+  const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
   const auth = getAuth(app);
   const firestore = getFirestore(app);
-  const storage = getStorage(app);
 
   if (
     window.location.hostname === 'localhost' ||
@@ -23,18 +17,9 @@ function FirebaseProvider({ children }) {
   ) {
     connectAuthEmulator(auth, 'http://localhost:9099');
     connectFirestoreEmulator(firestore, 'localhost', 8080);
-    connectStorageEmulator(storage, 'localhost', 9199);
   }
 
-  return (
-    <>
-      <AuthProvider sdk={auth}>
-        <FirestoreProvider sdk={firestore}>
-          <StorageProvider sdk={storage}>{children}</StorageProvider>
-        </FirestoreProvider>
-      </AuthProvider>
-    </>
-  );
+  return <>{children}</>;
 }
 
 export default FirebaseProvider;
