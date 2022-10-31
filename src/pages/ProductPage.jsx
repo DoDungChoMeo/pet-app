@@ -82,14 +82,6 @@ const ContainerStyled = styled.div`
     min-height: 200px;
     border-radius: 6px;
   }
-
-  .main-image {
-    text-align: center;
-  }
-
-  .image {
-    border-radius: 10px;
-  }
 `;
 
 const ReviewSection = styled.section`

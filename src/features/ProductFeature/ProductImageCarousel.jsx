@@ -10,18 +10,20 @@ const ProductImageCarousel = ({ images = [] }) => {
         <ImageStyled src={images[active]} />
       </Ratio>
       <div className="image-picker">
-        {images.map((image, i) => {
-          return (
-            <a key={i} onClick={() => setActive(i)}>
-              <img
-                key={image}
-                className="image"
-                src={image}
-                onClick={() => {}}
-              />
-            </a>
-          );
-        })}
+        {images.length > 1
+          ? images.map((image, i) => {
+              return (
+                <a key={i} onClick={() => setActive(i)}>
+                  <img
+                    key={image}
+                    className="image"
+                    src={image}
+                    onClick={() => {}}
+                  />
+                </a>
+              );
+            })
+          : null}
       </div>
     </Container>
   );
@@ -53,9 +55,12 @@ const Container = styled.div`
     display: flex;
     gap: 8px;
 
-    img {
+    .image {
       display: block;
       height: 100px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      padding: 5px;
     }
   }
 `;
