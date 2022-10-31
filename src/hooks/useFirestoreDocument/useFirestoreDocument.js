@@ -16,7 +16,7 @@ function useFirestoreDocument(path) {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [path]);
 
   return [document, loading];
 }
