@@ -2,11 +2,11 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { Skeleton } from 'antd';
-
-import { useFirestoreQuery } from '~/hooks';
-import { Review, ReviewForm } from '~/features/ReviewFeature';
-import { ProductImageCarousel, ProductEntry } from '~/features/ProductFeature';
 import { query, where, collection, getFirestore } from 'firebase/firestore';
+
+import { useFirestoreQuery, useFirestoreCollection } from '~/hooks';
+import { ReviewSection } from '~/features/ReviewFeature';
+import { ProductImageCarousel, ProductEntry } from '~/features/ProductFeature';
 
 function ProductPage() {
   const { bookmarkName } = useParams();
@@ -17,6 +17,10 @@ function ProductPage() {
     where('bookmarkName', '==', bookmarkName)
   );
   const [[product], productLoading] = useFirestoreQuery(q);
+
+  const [reviews, reviewsLoading] = useFirestoreCollection(
+    `products/${product?.productId}/reviews`
+  );
 
   return (
     <>
@@ -49,14 +53,7 @@ function ProductPage() {
           </div>
         </section>
 
-        {/* <ReviewSection className="review-section">
-          <h3 className="review-title">1 đánh giá</h3>
-          <Review />
-          <ReviewForm
-            title={'Đánh giá cho sản phẩm'}
-            buttonText="Gửi đánh giá"
-          />
-        </ReviewSection> */}
+        <ReviewSection reviews={reviews} />
       </ContainerStyled>
     </>
   );
@@ -81,18 +78,6 @@ const ContainerStyled = styled.div`
     border-radius: 10px;
     min-height: 200px;
     border-radius: 6px;
-  }
-`;
-
-const ReviewSection = styled.section`
-  margin-top: 50px;
-
-  .review-title {
-    font-size: var(--fs-h3);
-  }
-
-  .review-form {
-    max-width: 700px;
   }
 `;
 
