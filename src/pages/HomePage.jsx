@@ -1,18 +1,15 @@
 import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { List, Row, Col, Skeleton } from 'antd';
 import styled from 'styled-components';
-import { getFirestore, collection, query, where } from 'firebase/firestore';
+
 import { Card } from '~/components';
-import { Category } from '~/features/ProductFeature';
-import { useFirestoreCollection, useFirestoreQuery } from '~/hooks';
+import { Category, useProducts } from '~/features/ProductFeature';
+import { useFirestoreCollection } from '~/hooks';
 
 function HomePage() {
-  const firestore = getFirestore();
-  const productQuery = query(
-    collection(firestore, 'products'),
-    where('status', '==', 'visible')
-  );
-  const [products, productsLoading] = useFirestoreQuery(productQuery);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [products, productsLoading] = useProducts();
   const [categories, categoriesLoading] = useFirestoreCollection('categories');
   const [brands, brandsLoading] = useFirestoreCollection('brands');
 
@@ -24,8 +21,20 @@ function HomePage() {
             title="Danh mục sản phẩm"
             items={categories}
             loading={categoriesLoading}
+            getActiveItem={(item) => {
+              searchParams.set('category', item);
+              setSearchParams(searchParams);
+            }}
           />
-          <Category title="Nhãn hiệu" items={brands} loading={brandsLoading} />
+          <Category
+            title="Nhãn hiệu"
+            items={brands}
+            loading={brandsLoading}
+            getActiveItem={(item) => {
+              searchParams.set('brand', item);
+              setSearchParams(searchParams);
+            }}
+          />
         </Col>
         <Col span={24} lg={20}>
           {productsLoading ? (
