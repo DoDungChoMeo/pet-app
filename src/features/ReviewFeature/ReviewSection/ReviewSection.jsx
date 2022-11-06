@@ -15,8 +15,6 @@ function ReviewSection({ reviews }) {
 }
 
 const ContainerStyled = styled.section`
-  margin-top: 50px;
-
   .review-title {
     font-size: var(--fs-h3);
   }

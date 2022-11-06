@@ -25,21 +25,21 @@ const ProductEntry = ({ product }) => {
   return (
     <Container>
       <h3>{product?.title}</h3>
-      <Rate defaultValue={product?.rating} disabled={true} />
+      {/* <Rate defaultValue={product?.rating} disabled={true} /> */}
       <p>
         <span>Thương hiệu: </span>
         <span className="brand">{product?.brand}</span>
-        <span> | </span>
+        <span className='divider'></span>
         <span>Tình trạng: </span>
         <Tag>{salesState?.status}</Tag>
       </p>
-      <p>
+      {/* <p>
         <span>Đã bán: </span>
         <Tag>{salesState?.sold}</Tag>
         <span> | </span>
         <span>Còn lại: </span>
         <Tag>{salesState?.remaining}</Tag>
-      </p>
+      </p> */}
       <p className="price">{formatVietnamCurrency(inventory?.price)}</p>
       <div className="product-control">
         <label htmlFor="quantity-input">
@@ -89,8 +89,13 @@ const ProductEntry = ({ product }) => {
 const Container = styled.div`
   h3 {
     font-size: var(--fs-h3);
-    font-weight: 700;
+    line-height: 1;
     margin: 0;
+  }
+
+  .divider {
+    border-left: 2px solid #bababa;
+    margin: 0 5px;
   }
 
   .price {

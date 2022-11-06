@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { Skeleton } from 'antd';
+import { Skeleton, Tabs } from 'antd';
 import { query, where, collection, getFirestore } from 'firebase/firestore';
 
 import { useFirestoreQuery, useFirestoreCollection } from '~/hooks';
@@ -22,9 +22,30 @@ function ProductPage() {
     `products/${product?.productId}/reviews`
   );
 
+  const tabItems = [
+    {
+      label: 'Đánh giá',
+      key: 'tab-1',
+      children: (
+        <>
+          <ReviewSection reviews={reviews} />
+        </>
+      ),
+    },
+    {
+      label: 'Mô tả sản phẩm',
+      key: 'tab-2',
+      children: (
+        <>
+          <ReviewSection reviews={reviews} />
+        </>
+      ),
+    },
+  ]
+
   return (
     <>
-      <ContainerStyled className="product-page">
+      <ProductSectionStyled className="product-page">
         <section className="product-main-content">
           <div className="product-images">
             {productLoading ? (
@@ -52,14 +73,23 @@ function ProductPage() {
             )}
           </div>
         </section>
+      </ProductSectionStyled>
 
-        <ReviewSection reviews={reviews} />
-      </ContainerStyled>
+      <TabsStyled defaultActiveKey="tab-1" items={tabItems} size="large"/>;
     </>
   );
 }
 
-const ContainerStyled = styled.div`
+const TabsStyled = styled(Tabs)`
+  margin: 20px 0;
+  background-color: var(--white-color);
+  box-shadow: var(--box-shadow-1);
+  border-radius: 10px;
+  width: 100%;
+  padding: 0px 20px;
+`
+
+const ProductSectionStyled = styled.div`
   background-color: var(--white-color);
   box-shadow: var(--box-shadow-1);
   border-radius: 10px;
