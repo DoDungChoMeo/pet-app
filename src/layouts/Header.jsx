@@ -30,7 +30,7 @@ function Header() {
 
 const ContainerStyled = styled.header`
   background-color: var(--white-color);
-  box-shadow: var(--box-shadow-1);
+  box-shadow: var(--box-shadow-0);
   nav {
     height: 100px;
     display: flex;

@@ -31,7 +31,7 @@ function Card({ title, image, rating, price, id, bookmarkName }) {
           <h4 className="title" title={title}>
             {title}
           </h4>
-          <Rate defaultValue={rating} disabled={true} />
+          {/* <Rate defaultValue={rating} disabled={true} /> */}
           <p className="price">{formatVietnamCurrency(price)}</p>
         </div>
 
@@ -76,8 +76,12 @@ const Container = styled.div`
       margin: 0;
       text-transform: capitalize;
       font-size: 1rem;
-      font-weight: 700;
-      white-space: nowrap;
+      font-weight: 600;
+      display: block;
+      display: -webkit-box;
+      line-height: 1.2;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
       overflow: hidden;
       text-overflow: ellipsis;
     }

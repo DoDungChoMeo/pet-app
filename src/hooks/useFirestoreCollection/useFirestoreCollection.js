@@ -16,7 +16,7 @@ function useFirestoreCollection(path) {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [path]);
 
   return [firestoreCollection, firestoreLoading];
 }

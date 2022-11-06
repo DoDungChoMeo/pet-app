@@ -1,12 +1,12 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { Skeleton } from 'antd';
-
-import { useFirestoreQuery } from '~/hooks';
-import { Review, ReviewForm } from '~/features/ReviewFeature';
-import { ProductImageCarousel, ProductEntry } from '~/features/ProductFeature';
+import { Skeleton, Tabs } from 'antd';
 import { query, where, collection, getFirestore } from 'firebase/firestore';
+
+import { useFirestoreQuery, useFirestoreCollection } from '~/hooks';
+import { ReviewSection } from '~/features/ReviewFeature';
+import { ProductImageCarousel, ProductEntry } from '~/features/ProductFeature';
 
 function ProductPage() {
   const { bookmarkName } = useParams();
@@ -18,9 +18,34 @@ function ProductPage() {
   );
   const [[product], productLoading] = useFirestoreQuery(q);
 
+  const [reviews, reviewsLoading] = useFirestoreCollection(
+    `products/${product?.productId}/reviews`
+  );
+
+  const tabItems = [
+    {
+      label: 'Đánh giá',
+      key: 'tab-1',
+      children: (
+        <>
+          <ReviewSection reviews={reviews} />
+        </>
+      ),
+    },
+    {
+      label: 'Mô tả sản phẩm',
+      key: 'tab-2',
+      children: (
+        <>
+          <ReviewSection reviews={reviews} />
+        </>
+      ),
+    },
+  ]
+
   return (
     <>
-      <ContainerStyled className="product-page">
+      <ProductSectionStyled className="product-page">
         <section className="product-main-content">
           <div className="product-images">
             {productLoading ? (
@@ -48,21 +73,23 @@ function ProductPage() {
             )}
           </div>
         </section>
+      </ProductSectionStyled>
 
-        {/* <ReviewSection className="review-section">
-          <h3 className="review-title">1 đánh giá</h3>
-          <Review />
-          <ReviewForm
-            title={'Đánh giá cho sản phẩm'}
-            buttonText="Gửi đánh giá"
-          />
-        </ReviewSection> */}
-      </ContainerStyled>
+      <TabsStyled defaultActiveKey="tab-1" items={tabItems} size="large"/>;
     </>
   );
 }
 
-const ContainerStyled = styled.div`
+const TabsStyled = styled(Tabs)`
+  margin: 20px 0;
+  background-color: var(--white-color);
+  box-shadow: var(--box-shadow-1);
+  border-radius: 10px;
+  width: 100%;
+  padding: 0px 20px;
+`
+
+const ProductSectionStyled = styled.div`
   background-color: var(--white-color);
   box-shadow: var(--box-shadow-1);
   border-radius: 10px;
@@ -81,26 +108,6 @@ const ContainerStyled = styled.div`
     border-radius: 10px;
     min-height: 200px;
     border-radius: 6px;
-  }
-
-  .main-image {
-    text-align: center;
-  }
-
-  .image {
-    border-radius: 10px;
-  }
-`;
-
-const ReviewSection = styled.section`
-  margin-top: 50px;
-
-  .review-title {
-    font-size: var(--fs-h3);
-  }
-
-  .review-form {
-    max-width: 700px;
   }
 `;
 

@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { Skeleton } from 'antd';
 import styled from 'styled-components';
+import { useEffect } from 'react';
 
-function Category({ title, items, loading }) {
+function Category({ title, items, loading, getActiveItem = () => {} }) {
   const [activeItem, setActiveItem] = useState('');
-  console.log(activeItem);
+  useEffect(() => {
+    getActiveItem(activeItem);
+  }, [activeItem]);
+
   return (
     <ContainerStyled>
       <div className="category-header">
