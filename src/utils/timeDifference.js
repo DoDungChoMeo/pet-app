@@ -14,11 +14,11 @@ function timeDifference(current, previous) {
   } else if (elapsed < msPerDay) {
     return Math.round(elapsed / msPerHour) + ' giờ trước'; // ' hours ago'
   } else if (elapsed < msPerMonth) {
-    return 'approximately ' + Math.round(elapsed / msPerDay) + ' ngày trước'; // ' days ago'
+    return 'khoảng ' + Math.round(elapsed / msPerDay) + ' ngày trước'; // 'approximately ' ' days ago'
   } else if (elapsed < msPerYear) {
-    return 'approximately ' + Math.round(elapsed / msPerMonth) + ' tháng trước'; // ' months ago'
+    return 'khoảng ' + Math.round(elapsed / msPerMonth) + ' tháng trước'; // 'approximately ' ' months ago'
   } else {
-    return 'approximately ' + Math.round(elapsed / msPerYear) + ' năm trước'; // ' years ago'
+    return 'khoảng ' + Math.round(elapsed / msPerYear) + ' năm trước'; // 'approximately ' ' years ago'
   }
 }
 
