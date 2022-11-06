@@ -18,7 +18,7 @@ function MainLayout() {
       <Content>
         <Outlet />
       </Content>
-      {/* <Footer /> */}
+      <Footer />
     </LayoutStyled>
   );
 }
