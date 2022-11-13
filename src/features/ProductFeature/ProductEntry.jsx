@@ -90,7 +90,7 @@ const Container = styled.div`
   h3 {
     font-size: var(--fs-h3);
     line-height: 1;
-    margin: 0;
+    margin-bottom: 1rem;
   }
 
   .divider {
