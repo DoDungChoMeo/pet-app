@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useReducer, useState, useRef } from 'react';
 import cartReducer from './CartReducer';
 import {
+  initialState,
   SET_USER,
   SET_CART,
   ADD_TO_CART,
@@ -8,7 +9,6 @@ import {
   DECREASE_QUANTITY,
   REMOVE_ITEM,
   INPUT_QUANTITY,
-  EXPIRED_DAY,
 } from './CartReducer';
 import {
   getFirestore,
@@ -21,23 +21,11 @@ import { getCookie, setCookie, checkCookie } from '~/utils/cookies';
 
 const CartContext = React.createContext();
 
-const initialState = {
-  userId: '',
-  status: 'pending',
-  modifiedDate: new Date(),
-  expirationDate: new Date(
-    new Date().setDate(new Date().getDate() + EXPIRED_DAY)
-  ),
-  products: [],
-  quantity: 0,
-  total: 0,
-};
-
 function CartProvider({ children }) {
   const [cart, dispatch] = useReducer(cartReducer, initialState);
   const [userId, setUserId] = useState();
   const firestore = getFirestore();
-  console.log({ cart });
+  // console.log({ cart: JSON.stringify(cart) });
 
   const handleCookie = (() => {
     let executed = false;

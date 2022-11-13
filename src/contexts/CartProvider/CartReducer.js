@@ -7,7 +7,21 @@ export const REMOVE_ITEM = 'REMOVE_ITEM';
 export const INCREASE_QUANTITY = 'INCREASE_QUANTITY';
 export const DECREASE_QUANTITY = 'DECREASE_QUANTITY';
 export const INPUT_QUANTITY = 'INPUT_QUANTITY';
+export const SUBMIT_CART = 'SUBMIT_CART';
+
 export const EXPIRED_DAY = 3;
+
+export const initialState = {
+  userId: '',
+  status: 'pending',
+  modifiedDate: new Date(),
+  expirationDate: new Date(
+    new Date().setDate(new Date().getDate() + EXPIRED_DAY)
+  ),
+  products: [],
+  quantity: 0,
+  total: 0,
+};
 
 const cartReducer = (state, action) => {
   // sync to firestore any action add to cart, exclusive set user and set cart
@@ -213,6 +227,12 @@ const cartReducer = (state, action) => {
 
     syncToFirestore(currentCart);
     return currentCart;
+  }
+
+  // SET cart to initial state
+  if (action.type == SUBMIT_CART) {
+    syncToFirestore(initialState);
+    return initialState;
   }
 };
 
