@@ -14,7 +14,7 @@ const cartReducer = (state, action) => {
   const syncToFirestore = (currentCart) => {
     const firestore = getFirestore();
     const { userId } = state;
-    console.log('sync to fire store with data', {cart: currentCart});
+    // console.log('sync to fire store with data', {cart: currentCart});
     if (userId) {
       const userRef = doc(firestore, `users/${userId}`);
       setDoc(userRef, {userId: currentCart?.userId, cart: currentCart}, { merge: true })
