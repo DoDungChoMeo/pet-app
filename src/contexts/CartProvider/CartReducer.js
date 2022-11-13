@@ -28,8 +28,6 @@ const cartReducer = (state, action) => {
 
     return {
       modifiedOn: new Date(),
-      image: action.payload.image,
-      title: action.payload.title,
       products: newProducts,
       quantity: state.quantity + Number(action.payload.quantity),
       total:
