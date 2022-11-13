@@ -44,7 +44,7 @@ function CartPage() {
     inputQuantity,
     removeItem,
   } = useCartContext();
-  console.log(cart);
+
   let dataSource = [];
   dataSource = cart.products.map((cartItem) => {
     const { inventory } = cartItem;
