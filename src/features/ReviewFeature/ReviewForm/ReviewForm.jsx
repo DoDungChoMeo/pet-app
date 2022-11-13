@@ -26,15 +26,17 @@ function ReviewForm({ title, buttonText }) {
 
   const sendReview = async (values) => {
     const timestamp = serverTimestamp();
-    const reviewData = {
-      ...values,
-      createAt: timestamp,
-    };
 
     const productId = await getProductId(bookmarkName);
     const reviewsRef = doc(
       collection(firestore, `products/${productId}/reviews`)
     );
+
+    const reviewData = {
+      ...values,
+      reviewId: reviewsRef.id,
+      createAt: timestamp,
+    };
 
     setDoc(reviewsRef, reviewData)
       .then(() => {
