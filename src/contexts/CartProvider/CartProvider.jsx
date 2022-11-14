@@ -26,7 +26,7 @@ function CartProvider({ children }) {
   const [cart, dispatch] = useReducer(cartReducer, initialState);
   const [userId, setUserId] = useState();
   const firestore = getFirestore();
-
+  console.log({cart})
   const handleCookie = (() => {
     let executed = false;
     return function () {
@@ -37,7 +37,11 @@ function CartProvider({ children }) {
           return userId;
         } else {
           const userRef = doc(collection(firestore, 'users'));
-          setDoc(userRef, {userId: userRef.id, cart});
+          setDoc(userRef, {cart: {...cart, userId: userRef.id}, userId: userRef.id, userType: "guest"}).then(() => {
+            console.log('creat new guest successful')
+          }).catch((e) => {
+            console.log('creat new guest error :', e)
+          }); 
           setCookie('user', userRef.id, 3);
         }
       }
