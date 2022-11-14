@@ -1,10 +1,65 @@
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
+
+export const SET_USER = 'SET_USER';
+export const SET_CART = 'SET_CART';
 export const ADD_TO_CART = 'ADD_TO_CART';
 export const REMOVE_ITEM = 'REMOVE_ITEM';
 export const INCREASE_QUANTITY = 'INCREASE_QUANTITY';
 export const DECREASE_QUANTITY = 'DECREASE_QUANTITY';
 export const INPUT_QUANTITY = 'INPUT_QUANTITY';
+export const SUBMIT_CART = 'SUBMIT_CART';
+
+export const EXPIRED_DAY = 3;
+
+export const initialState = {
+  userId: '',
+  status: 'pending',
+  modifiedDate: new Date(),
+  expirationDate: new Date(
+    new Date().setDate(new Date().getDate() + EXPIRED_DAY)
+  ),
+  products: [],
+  quantity: 0,
+  total: 0,
+};
 
 const cartReducer = (state, action) => {
+  // sync to firestore any action add to cart, exclusive set user and set cart
+  const syncToFirestore = (currentCart) => {
+    const firestore = getFirestore();
+    const { userId } = state;
+    // console.log('sync to fire store with data', {cart: currentCart});
+    if (userId) {
+      const userRef = doc(firestore, `users/${userId}`);
+      setDoc(userRef, {userId: currentCart?.userId, cart: currentCart}, { merge: true })
+        .then(() => {
+          console.log('sync cart success');
+        })
+        .catch((error) => {
+          console.log('sync cart error: ', error);
+        });
+    }
+  };
+
+  // set owner user after have userId from cookie
+  if (action.type === SET_USER) {
+    return {
+      ...state,
+      modifiedDate: new Date(),
+      expirationDate: new Date(
+        new Date().setDate(new Date().getDate() + EXPIRED_DAY)
+      ),
+      userId: action.payload.userId,
+    };
+  }
+
+  // Action set cart after fetch data cart from database
+  if (action.type === SET_CART) {
+    return {
+      ...action.payload.cart,
+    };
+  }
+
   // Action add to cart
   if (action.type === ADD_TO_CART) {
     // find product in cart whether it's existed
@@ -26,16 +81,21 @@ const cartReducer = (state, action) => {
         )
       : [...state.products, action.payload];
 
-    return {
-      modifiedOn: new Date(),
-      image: action.payload.image,
-      title: action.payload.title,
+    const currentCart = {
+      ...state,
+      modifiedDate: new Date(),
+      expirationDate: new Date(
+        new Date().setDate(new Date().getDate() + EXPIRED_DAY)
+      ),
       products: newProducts,
       quantity: state.quantity + Number(action.payload.quantity),
       total:
         state.total +
         Number(action.payload.price) * Number(action.payload.quantity),
     };
+
+    syncToFirestore(currentCart);
+    return currentCart;
   }
   // Action increase quantity of an item
   if (action.type === INCREASE_QUANTITY) {
@@ -55,12 +115,19 @@ const cartReducer = (state, action) => {
     const newQuantity = state.quantity + 1;
     const newTotal = state.total + ProductModified.price;
 
-    return {
-      modifiedOn: new Date(),
+    const currentCart = {
+      ...state,
+      modifiedDate: new Date(),
+      expirationDate: new Date(
+        new Date().setDate(new Date().getDate() + EXPIRED_DAY)
+      ),
       products: newProducts,
       quantity: newQuantity,
       total: newTotal,
     };
+    
+    syncToFirestore(currentCart);
+    return currentCart;
   }
   // Action decrease quantity of an item
   if (action.type === DECREASE_QUANTITY) {
@@ -80,12 +147,19 @@ const cartReducer = (state, action) => {
     const newQuantity = state.quantity - 1;
     const newTotal = state.total - ProductModified.price;
 
-    return {
-      modifiedOn: new Date(),
+    const currentCart = {
+      ...state,
+      modifiedDate: new Date(),
+      expirationDate: new Date(
+        new Date().setDate(new Date().getDate() + EXPIRED_DAY)
+      ),
       products: newProducts,
       quantity: newQuantity,
       total: newTotal,
     };
+
+    syncToFirestore(currentCart);
+    return currentCart;
   }
 
   // input a product quantity
@@ -111,12 +185,19 @@ const cartReducer = (state, action) => {
       return prevValue + product?.quantity * product?.price;
     }, 0);
 
-    return {
-      modifiedOn: new Date(),
+    const currentCart = {
+      ...state,
+      modifiedDate: new Date(),
+      expirationDate: new Date(
+        new Date().setDate(new Date().getDate() + EXPIRED_DAY)
+      ),
       products: newProducts,
       quantity: newQuantity,
       total: newTotal,
     };
+
+    syncToFirestore(currentCart);
+    return currentCart;
   }
 
   // remove from cart
@@ -133,12 +214,30 @@ const cartReducer = (state, action) => {
       return prevValue + product?.quantity * product?.price;
     }, 0);
 
-    return {
-      modifiedOn: new Date(),
+    const currentCart = {
+      ...state,
+      modifiedDate: new Date(),
+      expirationDate: new Date(
+        new Date().setDate(new Date().getDate() + EXPIRED_DAY)
+      ),
       products: newProducts,
       quantity: newQuantity,
       total: newTotal,
     };
+
+    syncToFirestore(currentCart);
+    return currentCart;
+  }
+
+  // SET cart to initial state
+  if (action.type == SUBMIT_CART) {
+    const currentCart = {
+      ...initialState,
+      userId: state.userId
+    }
+
+    syncToFirestore(currentCart);
+    return currentCart;
   }
 };
 

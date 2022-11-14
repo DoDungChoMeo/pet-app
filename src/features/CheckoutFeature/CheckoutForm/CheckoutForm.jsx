@@ -53,12 +53,8 @@ function CheckoutForm({ form }) {
             },
           ]}
         >
-          <InputNumber
-            controls={false}
+          <Input
             placeholder="Số điện thoại"
-            style={{
-              width: '100%',
-            }}
           />
         </Form.Item>
         {/* <Form.Item

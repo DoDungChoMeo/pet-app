@@ -14,8 +14,8 @@ const ProductEntry = ({ product }) => {
     inventory?.stock,
     inventory?.reservations
   );
-  const productInCart = cart.products.find(
-    (cartItem) => cartItem.productId === product?.productId
+  const productInCart = cart?.products?.find(
+    (cartItem) => cartItem?.productId === product?.productId
   );
 
   const numberCanAdd = productInCart?.quantity
@@ -90,7 +90,7 @@ const Container = styled.div`
   h3 {
     font-size: var(--fs-h3);
     line-height: 1;
-    margin: 0;
+    margin-bottom: 1rem;
   }
 
   .divider {
