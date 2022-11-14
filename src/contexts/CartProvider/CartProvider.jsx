@@ -9,6 +9,7 @@ import {
   DECREASE_QUANTITY,
   REMOVE_ITEM,
   INPUT_QUANTITY,
+  SUBMIT_CART
 } from './CartReducer';
 import {
   getFirestore,
@@ -25,7 +26,6 @@ function CartProvider({ children }) {
   const [cart, dispatch] = useReducer(cartReducer, initialState);
   const [userId, setUserId] = useState();
   const firestore = getFirestore();
-  // console.log({ cart: JSON.stringify(cart) });
 
   const handleCookie = (() => {
     let executed = false;
@@ -88,6 +88,10 @@ function CartProvider({ children }) {
     dispatch({ type: REMOVE_ITEM, payload: { productId } });
   };
 
+  const submitCart = () => {
+    dispatch({type: SUBMIT_CART, payload: {}})
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -97,6 +101,7 @@ function CartProvider({ children }) {
         decreaseQuantity,
         inputQuantity,
         removeItem,
+        submitCart,
         userId
       }}
     >

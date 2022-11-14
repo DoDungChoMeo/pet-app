@@ -231,8 +231,13 @@ const cartReducer = (state, action) => {
 
   // SET cart to initial state
   if (action.type == SUBMIT_CART) {
-    syncToFirestore(initialState);
-    return initialState;
+    const currentCart = {
+      ...initialState,
+      userId: state.userId
+    }
+
+    syncToFirestore(currentCart);
+    return currentCart;
   }
 };
 

@@ -131,10 +131,10 @@ function CartPage() {
           onClick={() => navigate('/checkout')}
           disabled={cart?.quantity === 0}
         >
-          Tiến hành thanh toán
+          Tiến hành đặt hàng
         </Button>
       </CartSummary>
-    </ContainerStyled>
+    </ContainerStyled>  
   );
 }
 

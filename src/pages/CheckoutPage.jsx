@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Row, Col, Divider, Button, Form } from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
+import { Row, Col, Divider, Button, Form, message, Typography } from 'antd';
 import styled from 'styled-components';
+import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
 
 import {
   CheckoutForm,
@@ -12,7 +13,8 @@ import { Price } from '~/components';
 import { useCartContext } from '~/contexts/CartProvider';
 
 function CheckoutPage() {
-  const { cart } = useCartContext();
+  const navigate = useNavigate();
+  const { cart, userId, submitCart } = useCartContext();
   const [formCheckout] = Form.useForm();
   const [formPayment] = Form.useForm();
   const handleCheckout = () => {
@@ -22,13 +24,31 @@ function CheckoutPage() {
         formPayment
           .validateFields()
           .then((payment) => {
+            const userData = {
+              email: values.email.trim() || '',
+              name: values.name.trim() || '',
+              phone: values.phone.trim() || '',
+              address: values.address.trim() || '',
+              userId
+            }
+            const firestore = getFirestore();
+            const orderRef = doc(collection(firestore, 'orders'));
             const orderData = {
-              ...values,
+              orderId: orderRef.id,
+              user: userData,
               notes: values.notes || '',
-              ...payment,
+              paymentMethod: payment.paymentMethod || '',
               cart,
             };
-            console.log({ orderData });
+            setDoc(orderRef, orderData)
+            .then(() => {
+                submitCart();
+                message.success('Đặt hàng thành công');
+                navigate('/successful-checkout', {state: {order: orderData}});
+              })
+              .catch((e) => {
+                message.error('Đặt hàng thất bại: ', e);
+              });            
           })
           .catch((e) => console.log(e));
       })
@@ -37,6 +57,7 @@ function CheckoutPage() {
 
   return (
     <ContainerStyled>
+      <Typography.Title level={2}>Đặt hàng</Typography.Title>
       <Row gutter={[50, 0]}>
         <Col span={24} lg={8}>
           <Headline>
@@ -69,7 +90,7 @@ function CheckoutPage() {
               type="primary"
               disabled={cart?.quantity === 0}
             >
-              Thanh toán
+              Đặt hàng
             </Button>
           </ButtonGroup>
         </Col>
