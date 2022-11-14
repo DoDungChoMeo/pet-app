@@ -26,7 +26,7 @@ function CartProvider({ children }) {
   const [cart, dispatch] = useReducer(cartReducer, initialState);
   const [userId, setUserId] = useState();
   const firestore = getFirestore();
-  console.log({cart})
+  
   const handleCookie = (() => {
     let executed = false;
     return function () {
