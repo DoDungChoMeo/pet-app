@@ -14,8 +14,8 @@ const ProductEntry = ({ product }) => {
     inventory?.stock,
     inventory?.reservations
   );
-  const productInCart = cart.products.find(
-    (cartItem) => cartItem.productId === product?.productId
+  const productInCart = cart?.products?.find(
+    (cartItem) => cartItem?.productId === product?.productId
   );
 
   const numberCanAdd = productInCart?.quantity

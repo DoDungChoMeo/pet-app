@@ -37,8 +37,8 @@ function CartProvider({ children }) {
           return userId;
         } else {
           const userRef = doc(collection(firestore, 'users'));
-          setDoc(userRef, cart);
-          setCookie('user', userRef.id);
+          setDoc(userRef, {userId: userRef.id, cart});
+          setCookie('user', userRef.id, 3);
         }
       }
     };
@@ -97,6 +97,7 @@ function CartProvider({ children }) {
         decreaseQuantity,
         inputQuantity,
         removeItem,
+        userId
       }}
     >
       {children}
