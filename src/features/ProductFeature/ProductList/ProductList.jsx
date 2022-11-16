@@ -43,7 +43,6 @@ function ProductList({ products, loading, totalProducts }) {
             searchParams.set('page', page);
             setSearchParams(searchParams);
           }}
-          current={searchParams.get('page') || 1}
         />
       </HeaderStyled>
       {loading ? (

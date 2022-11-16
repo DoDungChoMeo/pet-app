@@ -25,7 +25,7 @@ function useProducts() {
     const pageParam = Number(searchParams.get('page')) || 1;
     const sortParam = searchParams.get('sort');
 
-    const queryParams = [collection(firestore, 'products')];
+    const queryParams = [collection(firestore, 'products'), where("status", "==", "visible")];
 
     if (categoryParam) {
       queryParams.push(where('categories', 'array-contains', categoryParam));
