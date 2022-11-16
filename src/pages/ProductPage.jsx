@@ -22,18 +22,43 @@ function ProductPage() {
     `products/${product?.productId}/reviews`
   );
 
+  const formatDescription = (descStr) => {
+    if (descStr) {
+      const descArr = descStr?.split('\n');
+      const formattedDesc = descArr?.map((current, index, arr) => {
+        const after = arr[index + 1];
+        if (current.length == 0) return;
+        if (current?.length < 30 && current?.length < after?.length) {
+          return <h2 key={index}>{current}</h2>;
+        }
+        return <p key={index}>{current}</p>;
+      });
+
+      // remove undefined values
+      const removedFormattedDesc = formattedDesc?.filter(
+        (element) => element !== undefined
+      );
+
+      return removedFormattedDesc;
+    }
+  };
+
   const tabItems = [
     {
-      label: 'Đánh giá',
+      label: 'Mô tả sản phẩm',
       key: 'tab-1',
       children: (
         <>
-          <ReviewSection reviews={reviews} />
+          {product?.description ? (
+            formatDescription(product?.description)
+          ) : (
+            <p>Không có mô tả</p>
+          )}
         </>
       ),
     },
     {
-      label: 'Mô tả sản phẩm',
+      label: 'Đánh giá',
       key: 'tab-2',
       children: (
         <>
@@ -41,7 +66,7 @@ function ProductPage() {
         </>
       ),
     },
-  ]
+  ];
 
   return (
     <>
@@ -75,7 +100,7 @@ function ProductPage() {
         </section>
       </ProductSectionStyled>
 
-      <TabsStyled defaultActiveKey="tab-1" items={tabItems} size="large"/>;
+      <TabsStyled defaultActiveKey="tab-1" items={tabItems} size="large" />
     </>
   );
 }
@@ -87,7 +112,7 @@ const TabsStyled = styled(Tabs)`
   border-radius: 10px;
   width: 100%;
   padding: 0px 20px;
-`
+`;
 
 const ProductSectionStyled = styled.div`
   background-color: var(--white-color);
