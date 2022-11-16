@@ -1,15 +1,15 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { List, Row, Col, Skeleton } from 'antd';
+import { Row, Col } from 'antd';
 import styled from 'styled-components';
 
-import { Card } from '~/components';
+import { ProductList } from '~/features/ProductFeature';
 import { Category, useProducts } from '~/features/ProductFeature';
 import { useFirestoreCollection } from '~/hooks';
 
 function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [products, productsLoading] = useProducts();
+  const [products, productsLoading, totalProducts] = useProducts();
   const [categories, categoriesLoading] = useFirestoreCollection('categories');
   const [brands, brandsLoading] = useFirestoreCollection('brands');
 
@@ -22,8 +22,14 @@ function HomePage() {
             items={categories}
             loading={categoriesLoading}
             getActiveItem={(item) => {
-              searchParams.set('category', item);
-              setSearchParams(searchParams);
+              if (item) {
+                searchParams.set('category', item);
+                searchParams.set('page', 1);
+                setSearchParams(searchParams);
+              } else {
+                searchParams.delete('category');
+                setSearchParams(searchParams);
+              }
             }}
           />
           <Category
@@ -31,58 +37,23 @@ function HomePage() {
             items={brands}
             loading={brandsLoading}
             getActiveItem={(item) => {
-              searchParams.set('brand', item);
-              setSearchParams(searchParams);
+              if (item) {
+                searchParams.set('brand', item);
+                searchParams.set('page', 1);
+                setSearchParams(searchParams);
+              } else {
+                searchParams.delete('brand');
+                setSearchParams(searchParams);
+              }
             }}
           />
         </Col>
         <Col span={24} lg={20}>
-          {productsLoading ? (
-            <>
-              <Skeleton
-                active
-                paragraph={{
-                  rows: 8,
-                }}
-              />
-            </>
-          ) : (
-            <List
-              grid={{
-                gutter: [20, 40],
-                xxl: 5,
-                xl: 5,
-                lg: 5,
-                md: 3,
-                sm: 2,
-                xs: 1,
-              }}
-              dataSource={products}
-              renderItem={(item) => {
-                const {
-                  title,
-                  images,
-                  rating,
-                  productId,
-                  bookmarkName,
-                  inventory,
-                } = item;
-
-                return (
-                  <List.Item>
-                    <Card
-                      title={title}
-                      image={images[0]}
-                      rating={rating}
-                      id={productId}
-                      price={inventory?.price}
-                      bookmarkName={bookmarkName}
-                    />
-                  </List.Item>
-                );
-              }}
-            />
-          )}
+          <ProductList
+            products={products}
+            loading={productsLoading}
+            totalProducts={totalProducts}
+          />
         </Col>
       </Row>
     </ContainerStyled>
