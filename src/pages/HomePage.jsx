@@ -4,14 +4,15 @@ import { Row, Col } from 'antd';
 import styled from 'styled-components';
 
 import { ProductList } from '~/features/ProductFeature';
-import { Category, useProducts } from '~/features/ProductFeature';
+import { Category } from '~/features/ProductFeature';
+import { useProductContext } from '~/contexts/ProductProvider';
 import { useFirestoreCollection } from '~/hooks';
 
 function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [products, productsLoading, totalProducts] = useProducts();
   const [categories, categoriesLoading] = useFirestoreCollection('categories');
   const [brands, brandsLoading] = useFirestoreCollection('brands');
+  const { productState, productLoading } = useProductContext();
 
   return (
     <ContainerStyled className="home-page">
@@ -50,9 +51,9 @@ function HomePage() {
         </Col>
         <Col span={24} lg={20}>
           <ProductList
-            products={products}
-            loading={productsLoading}
-            totalProducts={totalProducts}
+            products={productState?.products}
+            loading={productLoading}
+            totalProducts={productState?.originalProducts?.length}
           />
         </Col>
       </Row>
