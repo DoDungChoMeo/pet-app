@@ -19,7 +19,7 @@ function Header() {
           </Link>
         </Logo>
         <div className='nav-search'>
-          <Search />
+          <Search placeholder="Tìm sản phẩm, danh mục hay thương hiệu mong muốn ..." />
         </div>
         <CartLink to="/cart">
           <Badge count={cart?.quantity} showZero>

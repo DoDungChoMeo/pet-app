@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-function Search({ buttonMode, buttonText }) {
+function Search({ placeholderText, buttonMode, buttonText, ...props }) {
   const navigate = useNavigate();
   const [value, setValue] = useState('');
 
@@ -23,6 +23,7 @@ function Search({ buttonMode, buttonText }) {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={handleKeyDown}
+        {...props}
       />
 
       {buttonMode ? (
