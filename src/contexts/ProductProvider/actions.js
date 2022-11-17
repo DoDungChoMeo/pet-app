@@ -1,0 +1,8 @@
+export const FETCH_PRODUCTS = 'FETCH_PRODUCTS'
+export const SORT_NEWEST = 'SORT_NEWEST'
+export const SORT_OLDEST = 'SORT_OLDEST'
+export const SORT_PRICE_ASC = 'SORT_PRICE_ASC'
+export const SORT_PRICE_DESC = 'SORT_PRICE_DESC'
+export const PAGINATE = 'PAGINATE'
+export const CATEGORY = 'CATEGORY'
+export const BRAND = 'BRAND'
