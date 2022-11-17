@@ -50,10 +50,12 @@ function ProductProvider({ children }) {
   }, []);
 
   useEffect(() => {
+    handleLoading();
     dispatch({ type: CATEGORY, payload: { categoryParam } });
   }, [categoryParam])
 
   useEffect(() => {
+    handleLoading();
     dispatch({ type: BRAND, payload: { brandParam } });
   }, [brandParam])
 
@@ -80,6 +82,7 @@ function ProductProvider({ children }) {
   }, [sortParam]);
 
   useEffect(() => {
+    handleLoading();
     dispatch({ type: PAGINATE, payload: { pageParam } });
   }, [pageParam]) 
 
