@@ -8,8 +8,8 @@ import { PAGE_SIZE } from '~/constants';
 function ProductList({ products, loading, totalProducts }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const menuItems = [
-    { label: 'Mặc định', key: 'default' },
-    { label: 'Mới nhất', key: 'createAt-desc' },
+    { label: 'Mới nhất', key: 'newest' },
+    { label: 'Cũ nhất', key: 'oldest' },
     { label: 'Giá giảm dần', key: 'price-desc' },
     { label: 'Giá tăng dần', key: 'price-asc' },
   ];
@@ -18,8 +18,7 @@ function ProductList({ products, loading, totalProducts }) {
     <div>
       <HeaderStyled className="product-list-header">
         <Menu
-          className="sort-menu"
-          defaultActiveFirst
+          className="sort-menu"       
           items={menuItems}
           mode={'horizontal'}
           onSelect={(select) => {
@@ -36,7 +35,6 @@ function ProductList({ products, loading, totalProducts }) {
         <Pagination
           className="pagination"
           simple
-          defaultCurrent={1}
           pageSize={PAGE_SIZE}
           total={totalProducts}
           onChange={(page) => {
