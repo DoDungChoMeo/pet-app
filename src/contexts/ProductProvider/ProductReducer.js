@@ -7,54 +7,66 @@ import {
   PAGINATE,
   CATEGORY,
   BRAND,
+  SEARCH,
+  RESET,
 } from './actions';
 import { PAGE_SIZE } from '~/constants';
+import { searchProduct } from '~/utils';
 
 const productReducer = (state, action) => {
   if (action.type === FETCH_PRODUCTS) {
     const { products } = action.payload;
+
     return {
       products,
-      originalProducts: products,
+      originalProducts: [...products],
+    };
+  }
+
+  if (action.type === RESET) {
+    const products = [...state.originalProducts]; // make copy
+    return {
+      ...state,
+      products,
     };
   }
 
   if (action.type === SORT_NEWEST) {
-    const products = state.originalProducts.sort((a, b) =>
+    state.products.sort((a, b) =>
       a.createAt < b.createAt ? 1 : a.createAt > b.createAt ? -1 : 0
     );
+
     return {
       ...state,
-      products,
     };
   }
 
   if (action.type === SORT_OLDEST) {
-    const products = state.originalProducts.sort((a, b) =>
+    state.products.sort((a, b) =>
       a.createAt < b.createAt ? -1 : a.createAt > b.createAt ? 1 : 0
     );
+
     return {
       ...state,
-      products,
     };
   }
 
   if (action.type === SORT_PRICE_ASC) {
-    const products = state.originalProducts.sort((a, b) =>
+    state.products.sort((a, b) =>
       a.inventory.price < b.inventory.price
         ? -1
         : a.inventory.price > b.inventory.price
         ? 1
         : 0
     );
+
     return {
       ...state,
-      products,
     };
   }
 
   if (action.type === SORT_PRICE_DESC) {
-    const products = state.originalProducts.sort((a, b) =>
+    state.products.sort((a, b) =>
       a.inventory.price < b.inventory.price
         ? 1
         : a.inventory.price > b.inventory.price
@@ -64,19 +76,18 @@ const productReducer = (state, action) => {
 
     return {
       ...state,
-      products,
     };
   }
 
   if (action.type === PAGINATE) {
-    const pageParam = Number(action.payload.pageParam);
+    const pageParam = Number(action.payload.pageParam) || 1;
     const endAt = pageParam * PAGE_SIZE;
     const startAt = endAt - PAGE_SIZE;
     const products = state.originalProducts.slice(startAt, endAt);
 
     return {
       ...state,
-      products,
+      products
     };
   }
 
@@ -89,7 +100,7 @@ const productReducer = (state, action) => {
         return product.categories.includes(categoryParam);
       });
     } else {
-      products = state.originalProducts;
+      products = [...state.originalProducts]; // make copy
     }
 
     return {
@@ -106,7 +117,22 @@ const productReducer = (state, action) => {
         return product.brand === brandParam;
       });
     } else {
-      products = state.originalProducts;
+      products = [...state.originalProducts]; // make copy
+    }
+
+    return {
+      ...state,
+      products,
+    };
+  }
+
+  if (action.type === SEARCH) {
+    let products = [];
+    const { qParam } = action.payload;
+    if (qParam) {
+      products = searchProduct(state.originalProducts, qParam);
+    } else {
+      products = [];
     }
 
     return {

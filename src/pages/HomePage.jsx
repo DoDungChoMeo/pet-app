@@ -25,7 +25,6 @@ function HomePage() {
             getActiveItem={(item) => {
               if (item) {
                 searchParams.set('category', item);
-                searchParams.set('page', 1);
                 setSearchParams(searchParams);
               } else {
                 searchParams.delete('category');
@@ -40,7 +39,6 @@ function HomePage() {
             getActiveItem={(item) => {
               if (item) {
                 searchParams.set('brand', item);
-                searchParams.set('page', 1);
                 setSearchParams(searchParams);
               } else {
                 searchParams.delete('brand');
@@ -54,6 +52,7 @@ function HomePage() {
             products={productState?.products}
             loading={productLoading}
             totalProducts={productState?.originalProducts?.length}
+            hidePagination
           />
         </Col>
       </Row>

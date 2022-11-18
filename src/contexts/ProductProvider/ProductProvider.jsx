@@ -1,7 +1,15 @@
 import React, { useContext, useReducer, useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  query,
+  where,
+  limit,
+} from 'firebase/firestore';
 
+import { PRODUCT_LIMIT } from '~/constants';
 import {
   FETCH_PRODUCTS,
   SORT_NEWEST,
@@ -10,7 +18,9 @@ import {
   SORT_PRICE_ASC,
   PAGINATE,
   CATEGORY,
-  BRAND 
+  BRAND,
+  SEARCH,
+  RESET,
 } from './actions';
 import productReducer from './ProductReducer';
 import { initialState } from './initialState';
@@ -25,21 +35,27 @@ function ProductProvider({ children }) {
   const pageParam = searchParams.get('page');
   const categoryParam = searchParams.get('category');
   const brandParam = searchParams.get('brand');
+
   // console.log(productState)
   const fetchData = async () => {
     const firestore = getFirestore();
-    const snap = await getDocs(collection(firestore, 'products'));
+    const q = query(
+      collection(firestore, 'products'),
+      where('status', '==', 'visible'),
+      limit(PRODUCT_LIMIT)
+    );
+    const snap = await getDocs(q);
     return snap.docs.map((doc) => {
       return doc.data();
     });
   };
 
-  const handleLoading = () => {
-    setProductLoading(true)
+  const emulateLoading = () => {
+    setProductLoading(true);
     setTimeout(() => {
-      setProductLoading(false)
-    }, (200));
-  }
+      setProductLoading(false);
+    }, 200);
+  };
 
   useEffect(() => {
     fetchData().then((data) => {
@@ -49,45 +65,68 @@ function ProductProvider({ children }) {
     });
   }, []);
 
+  // when don't have every param. Return full product
   useEffect(() => {
-    handleLoading();
+    const params = Array.from(searchParams.values());
+    if (params.length === 0) {
+      emulateLoading();
+      dispatch({ type: RESET });
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    emulateLoading();
     dispatch({ type: CATEGORY, payload: { categoryParam } });
-  }, [categoryParam])
+  }, [categoryParam]);
 
   useEffect(() => {
-    handleLoading();
+    emulateLoading();
     dispatch({ type: BRAND, payload: { brandParam } });
-  }, [brandParam])
-
+  }, [brandParam]);
 
   useEffect(() => {
-    handleLoading();
+    emulateLoading();
+    switch (sortParam) {
+      case 'newest':
+        dispatch({ type: SORT_NEWEST });
+        break;
 
-    if (sortParam === 'newest') {
-      dispatch({ type: SORT_NEWEST });
+      case 'oldest':
+        dispatch({ type: SORT_OLDEST });
+        break;
+
+      case 'price-desc':
+        dispatch({ type: SORT_PRICE_DESC });
+        break;
+
+      case 'price-asc':
+        dispatch({ type: SORT_PRICE_ASC });
+        break;
+
+      default:
+        dispatch({ type: RESET });
+        break;
     }
-
-    if (sortParam === 'oldest') {
-      dispatch({ type: SORT_OLDEST });
-    }
-
-    if (sortParam === 'price-desc') {
-      dispatch({ type: SORT_PRICE_DESC });
-    }
-
-    if (sortParam === 'price-asc') {
-      dispatch({ type: SORT_PRICE_ASC });
-    }
-
   }, [sortParam]);
 
   useEffect(() => {
-    handleLoading();
-    dispatch({ type: PAGINATE, payload: { pageParam } });
-  }, [pageParam]) 
+    emulateLoading();
+    if (pageParam) {
+      dispatch({ type: PAGINATE, payload: { pageParam } });
+    } else {
+      dispatch({ type: RESET });
+    }
+  }, [pageParam]);
+
+  const searchProduct = (qParam) => {
+    emulateLoading();
+    dispatch({ type: SEARCH, payload: { qParam } });
+  };
 
   return (
-    <ProductContext.Provider value={{ productState, productLoading }}>
+    <ProductContext.Provider
+      value={{ productState, productLoading, searchProduct }}
+    >
       {children}
     </ProductContext.Provider>
   );
