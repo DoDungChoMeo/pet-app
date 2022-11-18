@@ -26,6 +26,7 @@ function ProductList({
         {hideHeader ? null : (
           <HeaderStyled className="product-list-header">
             <Menu
+              style={{ minWidth: 0, flex: 'auto' }} // responsive
               className="sort-menu"
               items={menuItems}
               mode={'horizontal'}
