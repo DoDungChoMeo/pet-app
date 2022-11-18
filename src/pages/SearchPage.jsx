@@ -12,25 +12,19 @@ import { searchProduct } from '~/utils';
 const { Title } = Typography;
 
 function SearchPage() {
+  const { productState, productLoading, searchProduct } = useProductContext();
   const [searchParams, setSearchParams] = useSearchParams();
   const q = searchParams.get('q');
-  const { productState } = useProductContext();
-  const [foundResult, setFoundResult] = useState([]);
-  const [searchLoading, setSearchLoading] = useState(true);
-
+  
   useEffect(() => {
-    setSearchLoading(true)
-    setFoundResult(searchProduct(productState?.originalProducts, q));
-    setTimeout(() => {
-      setSearchLoading(false)
-    }, 1000);
+    searchProduct(q);
   }, [q]);
 
   return (
     <ContainerStyled>
       <Title level={2}>Kết quả tìm kiếm cho "{q}"</Title>
       <>
-        {foundResult.length === 0 ? (
+        {productState?.products?.length === 0 ? (
           <p className="notfound">
             <WarningOutlined style={{ marginRight: '8px' }} />
             <span>
@@ -39,9 +33,10 @@ function SearchPage() {
           </p>
         ) : (
           <ProductList
-            products={foundResult}
-            loading={searchLoading}
-            totalProducts={foundResult.length}
+            hideHeader
+            products={productState?.products}
+            loading={productLoading}
+            totalProducts={productState?.products?.length}
           />
         )}
       </>
