@@ -1,50 +1,64 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Skeleton, List, Pagination, Menu } from 'antd';
 import styled from 'styled-components';
 import { Card } from '~/components';
 import { PAGE_SIZE } from '~/constants';
 
-function ProductList({ products, loading, totalProducts }) {
+function ProductList({
+  products,
+  loading,
+  totalProducts,
+  hideHeader,
+  hidePagination,
+}) {
   const [searchParams, setSearchParams] = useSearchParams();
   const menuItems = [
-    { label: 'Mặc định', key: 'default' },
-    { label: 'Mới nhất', key: 'createAt-desc' },
+    { label: 'Mới nhất', key: 'newest' },
+    { label: 'Cũ nhất', key: 'oldest' },
     { label: 'Giá giảm dần', key: 'price-desc' },
     { label: 'Giá tăng dần', key: 'price-asc' },
   ];
 
   return (
     <div>
-      <HeaderStyled className="product-list-header">
-        <Menu
-          className="sort-menu"
-          defaultActiveFirst
-          items={menuItems}
-          mode={'horizontal'}
-          onSelect={(select) => {
-            const { key } = select;
-            if (key === 'default') {
-              searchParams.delete('sort');
-              setSearchParams(searchParams);
-            } else {
-              searchParams.set('sort', key);
-              setSearchParams(searchParams);
-            }
-          }}
-        />
-        <Pagination
-          className="pagination"
-          simple
-          defaultCurrent={1}
-          pageSize={PAGE_SIZE}
-          total={totalProducts}
-          onChange={(page) => {
-            searchParams.set('page', page);
-            setSearchParams(searchParams);
-          }}
-        />
-      </HeaderStyled>
+      <>
+        {hideHeader ? null : (
+          <HeaderStyled className="product-list-header">
+            <Menu
+              style={{ minWidth: 0, flex: 'auto' }} // responsive
+              className="sort-menu"
+              items={menuItems}
+              mode={'horizontal'}
+              onSelect={(select) => {
+                const { key } = select;
+                if (key === 'default') {
+                  searchParams.delete('sort');
+                  setSearchParams(searchParams);
+                } else {
+                  searchParams.set('sort', key);
+                  setSearchParams(searchParams);
+                }
+              }}
+            />
+            <>
+              {hidePagination ? null : (
+                <Pagination
+                  className="pagination"
+                  simple
+                  pageSize={PAGE_SIZE}
+                  total={totalProducts}
+                  onChange={(page) => {
+                    searchParams.set('page', page);
+                    setSearchParams(searchParams);
+                  }}
+                />
+              )}
+            </>
+          </HeaderStyled>
+        )}
+      </>
+
       {loading ? (
         <>
           <Skeleton

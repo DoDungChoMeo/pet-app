@@ -4,14 +4,15 @@ import { Row, Col } from 'antd';
 import styled from 'styled-components';
 
 import { ProductList } from '~/features/ProductFeature';
-import { Category, useProducts } from '~/features/ProductFeature';
+import { Category } from '~/features/ProductFeature';
+import { useProductContext } from '~/contexts/ProductProvider';
 import { useFirestoreCollection } from '~/hooks';
 
 function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [products, productsLoading, totalProducts] = useProducts();
   const [categories, categoriesLoading] = useFirestoreCollection('categories');
   const [brands, brandsLoading] = useFirestoreCollection('brands');
+  const { productState, productLoading } = useProductContext();
 
   return (
     <ContainerStyled className="home-page">
@@ -24,7 +25,6 @@ function HomePage() {
             getActiveItem={(item) => {
               if (item) {
                 searchParams.set('category', item);
-                searchParams.set('page', 1);
                 setSearchParams(searchParams);
               } else {
                 searchParams.delete('category');
@@ -39,7 +39,6 @@ function HomePage() {
             getActiveItem={(item) => {
               if (item) {
                 searchParams.set('brand', item);
-                searchParams.set('page', 1);
                 setSearchParams(searchParams);
               } else {
                 searchParams.delete('brand');
@@ -50,9 +49,10 @@ function HomePage() {
         </Col>
         <Col span={24} lg={20}>
           <ProductList
-            products={products}
-            loading={productsLoading}
-            totalProducts={totalProducts}
+            products={productState?.products}
+            loading={productLoading}
+            totalProducts={productState?.originalProducts?.length}
+            hidePagination
           />
         </Col>
       </Row>

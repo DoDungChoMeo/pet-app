@@ -4,6 +4,7 @@ import { Badge } from 'antd';
 import styled from 'styled-components';
 import logo from '~/assets/img/logo-pet-friends-2.png';
 import { useCartContext } from '~/contexts/CartProvider';
+import { Search } from '~/components';
 
 function Header() {
   const { cart } = useCartContext();
@@ -17,7 +18,9 @@ function Header() {
             <img src={logo} />
           </Link>
         </Logo>
-
+        <div className='nav-search'>
+          <Search placeholder="Tìm sản phẩm, danh mục hay thương hiệu mong muốn ..." />
+        </div>
         <CartLink to="/cart">
           <Badge count={cart?.quantity} showZero>
             <ShoppingCartOutlined className="cart-icon" />
@@ -32,19 +35,29 @@ const ContainerStyled = styled.header`
   background-color: var(--white-color);
   box-shadow: var(--box-shadow-0);
   nav {
-    height: 100px;
+    min-height: 100px;
     display: flex;
     align-items: center;
-    padding: 0 20px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px 0;
+    padding: 20px;
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
     max-width: 1400px;
     margin: 0 auto;
   }
+  .nav-search {
+    width: 40%;
+    @media (max-width: 576px) {
+      flex: 1 1 100%;
+      order: 2;
+      text-align: center;
+    }
+  }
 `;
 
 const Logo = styled.div`
-  margin-right: auto;
   img {
     display: block;
     height: 80px;
