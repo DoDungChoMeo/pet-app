@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Row, Col, Divider, Button, Form, message, Typography } from 'antd';
 import styled from 'styled-components';
-import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
+import { getFirestore, collection, doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 import {
   CheckoutForm,
@@ -39,6 +39,7 @@ function CheckoutPage() {
               notes: values.notes || '',
               paymentMethod: payment.paymentMethod || '',
               cart,
+              createAt: serverTimestamp()
             };
             setDoc(orderRef, orderData)
             .then(() => {
