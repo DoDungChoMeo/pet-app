@@ -53,6 +53,8 @@ const Container = styled.div`
   .image-picker {
     margin-top: 20px;
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 8px;
 
     .image {
