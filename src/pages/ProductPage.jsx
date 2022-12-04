@@ -96,22 +96,22 @@ function ProductPage() {
             ) : (
               <ProductEntry product={product} />
             )}
+            <TabsStyled
+              defaultActiveKey="tab-1"
+              items={tabItems}
+              size="large"
+            />
           </div>
         </section>
       </ProductSectionStyled>
-
-      <TabsStyled defaultActiveKey="tab-1" items={tabItems} size="large" />
     </>
   );
 }
 
 const TabsStyled = styled(Tabs)`
   margin: 20px 0;
-  background-color: var(--white-color);
-  box-shadow: var(--box-shadow-1);
   border-radius: 10px;
   width: 100%;
-  padding: 0px 20px;
 `;
 
 const ProductSectionStyled = styled.div`
