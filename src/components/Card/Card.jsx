@@ -15,7 +15,7 @@ function Card({ title, image, rating, price, id, bookmarkName }) {
     <Container>
       <div className="card-inner">
         <div className="card-image-wrapper">
-          <Link to={'product/' + bookmarkName}>
+          <Link to={'/product/' + bookmarkName}>
             {/* <Link to={'product/' + toKebabCase(removeVietnameseTones(title))}> */}
             <figure className="ratio">
               <img
