@@ -19,6 +19,7 @@ import {
   getDoc,
 } from 'firebase/firestore';
 import { getCookie, setCookie, checkCookie } from '~/utils/cookies';
+import { message } from 'antd';
 
 const CartContext = React.createContext();
 
@@ -74,6 +75,7 @@ function CartProvider({ children }) {
 
   const addToCart = (product) => {
     dispatch({ type: ADD_TO_CART, payload: product });
+    message.success('Thêm sản phẩm thành công');
   };
 
   const increaseQuantity = (productId) => {
